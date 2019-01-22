@@ -26,7 +26,7 @@
             /* 留出header及footer區塊的空間 */
             padding-top: 40px;
             padding-bottom: 100px;
-            padding:60px 15% 30px;
+            padding:60px % 30px;
         }
 
         #id_footer {
