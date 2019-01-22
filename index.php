@@ -112,7 +112,9 @@
 
             <div id='outputimg'>
                 <h3>QR code</h3>
-                <img src="" id="qrcode" alt="" />
+
+                <a  id='qrcode_a' href="" download><img src="" id="qrcode" alt="" /></a>
+
                 <div id='outputexcel'>
                     
                 </div>
@@ -131,8 +133,9 @@
 		var qr_url = document.getElementById('url').value;
         var qr_img = document.getElementById('qrcode');
         var qr_data = "./php/qr_img.php?d="+qr_url+"&e=M&s=4"
-        
+        var qr_a = document.getElementById('qrcode_a');
         qr_img.src = qr_data;
+        qr_a.href = qr_data;
 	}
     function SingleInput(){
         document.getElementById('single_input').style.display = ("");
@@ -148,16 +151,22 @@
     }
     function CheckFile(){
         var FilePath = document.getElementById('excelFile').value;
-        var File_Extension = FilePath.slice((FilePath.lastIndexOf(".") - 1 >>> 0) + 2);
-        if (File_Extension!='xlsx'){
-            alert('輸入檔案格式錯誤');
-            document.getElementById('excelFile').value = '';
+        if(FilePath){
+            var File_Extension = FilePath.slice((FilePath.lastIndexOf(".") - 1 >>> 0) + 2);
+            if (File_Extension!='xlsx'){
+                alert('輸入檔案格式錯誤');
+                document.getElementById('excelFile').value = '';
+            }
+            else{
+                var startIndex = (FilePath.indexOf('\\') >= 0 ? FilePath.lastIndexOf('\\') : FilePath.lastIndexOf('/'));
+                var filename = FilePath.substring(startIndex+1);
+                document.getElementById('excellabel').innerText = filename;
+            }    
         }
         else{
-            var startIndex = (FilePath.indexOf('\\') >= 0 ? FilePath.lastIndexOf('\\') : FilePath.lastIndexOf('/'));
-            var filename = FilePath.substring(startIndex+1);
-            document.getElementById('excellabel').innerText = filename;
+            document.getElementById('excellabel').innerText = '選擇檔案';
         }
+        
     }
 </script>
 </body>
