@@ -9,6 +9,7 @@ $reader = PHPExcel_IOFactory::load('input/'.$timenamefolder.'/'.$filename);
 
 $sheet=$reader->getActiveSheet();
 $url_array = array();
+$first_title = $sheet->getCell('A1');
 foreach ($sheet->getRowIterator() as $row) {
 	$cellIterator = $row->getCellIterator(); 
 	$cellIterator->setIterateOnlyExistingCells(false);
@@ -17,10 +18,14 @@ foreach ($sheet->getRowIterator() as $row) {
 	// By default, only cells 
 	// that are set will be
     // iterated. 
+
 	foreach ($cellIterator as $cell) { 
 		$url = $cell->getValue(); 
 	}
-	array_push($url_array,$url);
+	if($first_title!=$url){
+		array_push($url_array,$url);
+	}
+	
 }
 include_once($dir."/qr_img2.php");
 for($i=0;$i<count($url_array);$i++) {
@@ -57,5 +62,8 @@ if (!file_exists('./output/'.$timenamefolder.'/')){
     mkdir('./output/'.$timenamefolder.'/');
   }
 $objWrite->save("output/".$timenamefolder."/".$filename);//保存到當前文檔夾下
-echo '<br><br><button type="button" class="btn btn-info" onclick="window.location.href=\'./php/output/'.$timenamefolder.'/'.$filename.'\'">下載結果</button>';
+
+echo '<br><br><button type="button" class="btn btn-info" onclick="window.location.href=\'./php/output/'.$timenamefolder.'/'.$filename.'\'">下載Excel</button>';
+
+echo '&nbsp;<button type="button" class="btn btn-info" onclick="window.location.href=\'./php/download.php?timenamefolder='.$timenamefolder.'\'">下載圖檔</button>';
 ?>
