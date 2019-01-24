@@ -9,7 +9,8 @@ $reader = PHPExcel_IOFactory::load('input/'.$timenamefolder.'/'.$filename);
 
 $sheet=$reader->getActiveSheet();
 $url_array = array();
-$first_title = $sheet->getCell('A1');
+$first_Cell = $sheet->getCell('A1');
+$first_title = $first_Cell->getValue();
 foreach ($sheet->getRowIterator() as $row) {
 	$cellIterator = $row->getCellIterator(); 
 	$cellIterator->setIterateOnlyExistingCells(false);
@@ -18,14 +19,13 @@ foreach ($sheet->getRowIterator() as $row) {
 	// By default, only cells 
 	// that are set will be
     // iterated. 
-
 	foreach ($cellIterator as $cell) { 
-		$url = $cell->getValue(); 
+		$url = $cell->getValue();
+		$url = (string)$url; 
+	    if(preg_match('~https?://[a-zA-Z0-9;/?:@&=+\.\\-%_]*~',$url)){
+		    array_push($url_array,$url);
+	    }
 	}
-	if($first_title!=$url){
-		array_push($url_array,$url);
-	}
-	
 }
 include_once($dir."/qr_img2.php");
 for($i=0;$i<count($url_array);$i++) {
