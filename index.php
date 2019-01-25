@@ -2,63 +2,71 @@
 <html>
 <head>
 	<title>QRcodeGenerator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=big5">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="ajax.js" ></script>
 	<style type="text/css">
         html, body {
         /* 設定body高度為100% 拉到視窗可視的大小 */
             height: 100%;
+            
         }
         #id_wrapper {
             /* 設定高度最小為100%, 如果內容區塊很多, 可以長大 */
             min-height: 100%;
-            /* 位置設為relative, 作為footer區塊位置的參考 */
-            position: relative;
         }
         #id_header {
             /* 設定header的高度 */
             height: 40px;
-            box-sizing: border-box;
         }
 
         #id_content {
-            /* 留出header及footer區塊的空間 */
-            padding-top: 40px;
-            padding-bottom: 100px;
-            padding:60px % 30px;
+            padding: 60px 20%;
+            padding-bottom: 50px;
         }
-
+        
         #id_footer {
-            /* 設定footer的高度 */
-            background-color: black;
-            height: 100px;
-            box-sizing: border-box;
-            /* 設定footer絕對位置在底部 */
-            position: absolute;
-            bottom: 0;
-            /* 展開footer寬度 */
-            width: 100%;
+            height: 50px;
+            margin-top: -50px;
+            background-color: #333;
+            color:#eee;
+            text-align: center;
+            font-size: 16px;
+             
         }
 	    div{
 	    	text-align:center;
 	    }
+        #id_content::before{
+            content:'';
+            display: inline-block;
+            height: 100%;
+            width: 0;
+            vertical-align: middle;
+        }
+        
         #inputurl{
         	background-color: white;
         	width:50%;
-        	height:450px;
-            
-            padding:20px ;
+        	height:500px;
+            padding:20px;
             border-style:solid;
-            float:left;
+            position: relative;
+            display: inline-block;
+            margin: 1em;
+            vertical-align: middle;
         }
         #outputimg{
         	background-color: white;
         	width:33%;
-        	height:450px;
+        	height:500px;
             padding:20px;
             border-style:solid;
-            float:right;
+            position: relative;
+            display: inline-block;
+            margin: 1em;
+            vertical-align: middle;
         }
         a:hover{
             text-decoration:none; 
@@ -78,7 +86,8 @@
         
         
         <div id='id_content'>
-            <h2 style="color:white;font-weight:bold;text-align: left;">建立你的QR code</h2><br>
+
+            <h2 style="color:white;font-weight:bold;text-align: left;">情緒辨識影片上傳介面</h2>
             <div id='inputurl'>
                 <div class="btn-group" role="group" aria-label="Basic example" style="text-align:left;width: 100%">
                   <button type="button" class="btn btn-outline-info" onclick="SingleInput();">單個輸入</button>
@@ -95,7 +104,8 @@
                 </div>
                 <div id='multiple_input' style='display: none;'>
                     <h3 style="font-weight:bold;">在此上傳EXCEL檔</h3>
-                    <p style="color: red;">*excel中只能有一個網址欄位</p>
+                    <p style="color: red;">*Excel中只能有一個網址欄位 &nbsp;&nbsp;<a href="./demo.xlsx" download>Excel範例</a></p>
+                    
                     <br>
                     <form id='excelForm'>
                         <div class="custom-file">
@@ -112,6 +122,7 @@
 
             <div id='outputimg'>
                 <h3>QR code</h3>
+                <p id='urlname'></p>
 
                 <a  id='qrcode_a' href="" download><img src="" id="qrcode" alt="" /></a>
 
@@ -119,18 +130,26 @@
                     
                 </div>
             </div>
+                
         </div>
         
-        <footer id="id_footer" ><br>
-            <p style="color:white;">QR code 製作參考資料來源</p>
-            <a href="http://www.swetake.com/qr/qr_cgi_e.html"style="color:white;">http://www.swetake.com/qr/qr_cgi_e.html</a>
-        </footer>    
+        
     </div>
-	
+	<footer id="id_footer" >
+        <p style="color:white; line-height: 50px; margin: 0;">QR code Made By QRcode Perl CGI & PHP scripts ver. 0.50</p>
+    </footer>
 
 <script type="text/javascript">
 	function doQRcode(){
+
+        
+        document.getElementById("urlname").style.display = ("none");
 		var qr_url = document.getElementById('url').value;
+        var qr_crawler = $.get( "./php/callcrawler.php?url="+qr_url, function( data ) {
+            document.getElementById("urlname").style.display = ("");
+            $( "#urlname" ).html( data );
+            
+        });
         var qr_img = document.getElementById('qrcode');
         var qr_data = "./php/qr_img.php?d="+qr_url+"&e=M&s=4"
         var qr_a = document.getElementById('qrcode_a');

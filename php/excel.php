@@ -5,7 +5,7 @@ $dir=dirname('__FILE__'); //找到當前腳本所在路徑
 require_once($dir."/phpExcel/PHPExcel.php"); //引入文檔
 $filename = $_GET['filename'];
 $timenamefolder = $_GET['timenamefolder'];
-$reader = PHPExcel_IOFactory::load('input/'.$timenamefolder.'/'.$filename);
+$reader = PHPExcel_IOFactory::load($dir.'/input/'.$timenamefolder.'/'.$filename);
 
 $sheet=$reader->getActiveSheet();
 $url_array = array();
@@ -27,6 +27,7 @@ foreach ($sheet->getRowIterator() as $row) {
 	    }
 	}
 }
+
 include_once($dir."/qr_img2.php");
 for($i=0;$i<count($url_array);$i++) {
     callQRcode($url_array[$i],'M','4',$i,0,$timenamefolder);
